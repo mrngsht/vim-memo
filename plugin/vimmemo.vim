@@ -10,7 +10,7 @@ function! MemoOpen(size)
       let g:vim_memo_file_path = '~/.cache/memo/memo'
     endif
     silent! execute 'topleft ' . a:size . ' split'
-    silent! execute 'e ' . g.vim_memo_file_path
+    silent! execute 'e ' . g:vim_memo_file_path
     silent! execute 'setlocal bufhidden=hide'
     silent! execute 'setlocal nobuflisted'
     let g:vim_memo_window_id = win_getid()
