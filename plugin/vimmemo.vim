@@ -84,17 +84,17 @@ function! s:save_window(tabnr, winid) abort
   if !exists('g:memo_tab_winid_dic')
     let g:memo_tab_winid_dic= {}
   endif
-  let g:memo_tab_winid_di[printf("%d", a:tabnr)]=a:winid
+  let g:memo_tab_winid_dic[printf("%d", a:tabnr)]=a:winid
 endfunction
 
 function! s:exists_window(tabnr) abort
   if !exists('g:memo_tab_winid_dic')
     return 0
   endif
-  return has_key(g:memo_tab_winid_di, printf("%d", a:tabnr))
+  return has_key(g:memo_tab_winid_dic, printf("%d", a:tabnr))
 endfunction
 
 function! s:get_window(tabnr) abort
-  return g:memo_tab_winid_di[printf("%d", a:tabnr)]
+  return g:memo_tab_winid_dic[printf("%d", a:tabnr)]
 endfunction
 
