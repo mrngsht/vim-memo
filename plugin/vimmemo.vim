@@ -5,7 +5,7 @@ function! MemoOpenWithoutFocus(size)
 endfunction 
 
 function! MemoOpen(size) 
-  if !ExistsWindow(tabpagenr())
+  if !s:exists_window(tabpagenr())
     if !exists('g:vim_memo_file_path')
       let g:vim_memo_file_path = '~/.cache/memo/memo'
     endif
@@ -13,35 +13,35 @@ function! MemoOpen(size)
     silent! execute 'e ' . g:vim_memo_file_path
     silent! execute 'setlocal bufhidden=hide'
     silent! execute 'setlocal nobuflisted'
-    call SaveWindow(tabpagenr(), win_getid())
-    call SaveBuf(tabpagenr(), bufnr('%'))
+    call s:save_window(tabpagenr(), win_getid())
+    call s:save_buf(tabpagenr(), bufnr('%'))
   else 
-    let s:win_num = win_id2win(GetWindow(tabpagenr()))
+    let s:win_num = win_id2win(s:get_window(tabpagenr()))
     if s:win_num != 0
-      if win_getid() != GetWindow(tabpagenr())
-        call win_gotoid(GetWindow(tabpagenr()))
+      if win_getid() != s:get_window(tabpagenr())
+        call win_gotoid(s:get_window(tabpagenr()))
         silent! execute 'resize ' . a:size 
-      elseif ExistsBuf(tabpagenr()) && GetBuf(tabpagenr()) != bufnr('%')
-        silent! execute 'topleft ' . a:size . ' split +b' . GetBuf(tabpagenr())
-        call SaveWindow(tabpagenr(), win_getid())
-        call SaveBuf(tabpagenr(), bufnr('%'))
+      elseif s:exists_buf(tabpagenr()) && s:get_buf(tabpagenr()) != bufnr('%')
+        silent! execute 'topleft ' . a:size . ' split +b' . s:get_buf(tabpagenr())
+        call s:save_window(tabpagenr(), win_getid())
+        call s:save_buf(tabpagenr(), bufnr('%'))
       else
         call win_gotoid(win_getid(winnr() + 1))
       endif
     else
-      silent! execute 'topleft ' . a:size . ' split +b' . GetBuf(tabpagenr())
-      call SaveWindow(tabpagenr(), win_getid())
-      call SaveBuf(tabpagenr(), bufnr('%'))
+      silent! execute 'topleft ' . a:size . ' split +b' . s:get_buf(tabpagenr())
+      call s:save_window(tabpagenr(), win_getid())
+      call s:save_buf(tabpagenr(), bufnr('%'))
     endif
   endif
 endfunction
 
 function! MemoClose() 
-  if ExistsWindow(tabpagenr())
-    let s:win_num = win_id2win(GetWindow(tabpagenr()))
+  if s:exists_window(tabpagenr())
+    let s:win_num = win_id2win(s:get_window(tabpagenr()))
     if s:win_num != 0
       silent! execute s:win_num . 'hide'
-      if win_id2win(GetWindow(tabpagenr())) != 0
+      if win_id2win(s:get_window(tabpagenr())) != 0
         return 0
       endif
       return 1
@@ -62,39 +62,39 @@ function! MemoToggleWithoutFocus(size)
   endif
 endfunction
 
-function! SaveBuf(tabnr, bufnr) abort
+function! s:save_buf(tabnr, bufnr) abort
   if !exists('g:memo_tab_bufnr_dic')
     let g:memo_tab_bufnr_dic = {}
   endif
   let g:memo_tab_bufnr_dic[printf("%d", a:tabnr)]=a:bufnr
 endfunction
 
-function! ExistsBuf(tabnr) abort
+function! s:exists_buf(tabnr) abort
   if !exists('g:memo_tab_bufnr_dic')
     return 0
   endif
   return has_key(g:memo_tab_bufnr_dic, printf("%d", a:tabnr))
 endfunction
 
-function! GetBuf(tabnr) abort
+function! s:get_buf(tabnr) abort
   return g:memo_tab_bufnr_dic[printf("%d", a:tabnr)]
 endfunction
 
-function! SaveWindow(tabnr, winid) abort
+function! s:save_window(tabnr, winid) abort
   if !exists('g:memo_tab_winid_dic')
     let g:memo_tab_winid_dic= {}
   endif
   let g:memo_tab_winid_di[printf("%d", a:tabnr)]=a:winid
 endfunction
 
-function! ExistsWindow(tabnr) abort
+function! s:exists_window(tabnr) abort
   if !exists('g:memo_tab_winid_dic')
     return 0
   endif
   return has_key(g:memo_tab_winid_di, printf("%d", a:tabnr))
 endfunction
 
-function! GetWindow(tabnr) abort
+function! s:get_window(tabnr) abort
   return g:memo_tab_winid_di[printf("%d", a:tabnr)]
 endfunction
 
