@@ -63,38 +63,25 @@ function! MemoToggleWithoutFocus(size)
 endfunction
 
 function! s:save_buf(tabnr, bufnr) abort
-  if !exists('g:memo_tab_bufnr_dic')
-    let g:memo_tab_bufnr_dic = {}
-  endif
-  let g:memo_tab_bufnr_dic[printf("%d", a:tabnr)]=a:bufnr
+  call settabvar(a:tabnr, 'memo_bufnr', a:bufnr)
 endfunction
 
 function! s:exists_buf(tabnr) abort
-  if !exists('g:memo_tab_bufnr_dic')
-    return 0
-  endif
-  return has_key(g:memo_tab_bufnr_dic, printf("%d", a:tabnr))
+  return gettabvar(a:tabnr, 'memo_bufnr') != 0
 endfunction
 
 function! s:get_buf(tabnr) abort
-  return g:memo_tab_bufnr_dic[printf("%d", a:tabnr)]
+  return gettabvar(a:tabnr, 'memo_bufnr')
 endfunction
 
 function! s:save_window(tabnr, winid) abort
-  if !exists('g:memo_tab_winid_dic')
-    let g:memo_tab_winid_dic= {}
-  endif
-  let g:memo_tab_winid_dic[printf("%d", a:tabnr)]=a:winid
+  call settabvar(a:tabnr, 'memo_winid', a:winid)
 endfunction
 
 function! s:exists_window(tabnr) abort
-  if !exists('g:memo_tab_winid_dic')
-    return 0
-  endif
-  return has_key(g:memo_tab_winid_dic, printf("%d", a:tabnr))
+  return gettabvar(a:tabnr, 'memo_winid') != 0
 endfunction
 
 function! s:get_window(tabnr) abort
-  return g:memo_tab_winid_dic[printf("%d", a:tabnr)]
+  return gettabvar(a:tabnr, 'memo_winid')
 endfunction
-
